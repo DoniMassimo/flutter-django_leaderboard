@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Person, Group, Point, JoinRequest
-from .serializers import PersonSerializer, GroupSerializer, PointSerializer
+from .serializers import PersonSerializer, GroupSerializer, PointSerializer, JoinRequestSerializer
 
 import bcrypt
 import datetime
@@ -56,34 +56,6 @@ def create_group(request): # passed argument: name:name, pass:password, group_na
                 return Response({'correct':'group create correctly'})
             else:
                 return Response({'error':'group name arleady taken'})
-        else:
-            return Response({'error':'credential error'})
-    else:
-        return time_check
-
-@api_view(['POST'])
-def join_to_group(request):
-    group_name = request.data['group_name']
-    name = request.data['name']
-    pwd = request.data['pass']
-    time_check = check_inactivity_time(name)
-    if time_check == True:
-        if Person.objects.filter(name=name, password=pwd).exists():
-            if Group.objects.filter(group_name=group_name).exists():
-                group = Group.objects.get(group_name=group_name)
-                user = Person.objects.get(name=name)
-                if group.group_admin.pk == user.pk:
-                    return Response({'error':'group admin cant join group'})    
-                if user in group.user_joined.all():
-                    return Response({'error':'you are arleady in this group'})    
-                group.user_joined.add(user)
-                point = Point(person=user, group=group)
-                point.save()
-                user.save()
-                group.save()
-                return Response({'correct':'group joined correctly'})
-            else:
-                return Response({'error':'group does not exist'})
         else:
             return Response({'error':'credential error'})
     else:
@@ -154,15 +126,86 @@ def send_join_request(request): # passed argument: name: name, pass:password, gr
     time_check = check_inactivity_time(name)
     if time_check == True:
         if check == True:
-            pass
+            person = Person.objects.get(name=name)
+            group = Group.objects.get(group_name=group_name)
+            if not JoinRequest.objects.filter(person=person, group=group).exists():
+                join_request = JoinRequest(person=person, group=group)
+                join_request.save()
+                return Response({'correct':'you have send correctly teh join request'})
+            else:
+                return Response({'error':'you have arleady send join request'})
         else:
             return check
     else:
         return time_check
 
 @api_view(['POST'])
-def accept_join_request(request): # passed argument: name, pass:password, group_name:group_name, usertosend
-    pass
+def accept_join_request(request): # passed argument: name, pass:password, group_name:group_name, person
+    group_name = request.data['group_name']
+    admin_name = request.data['name']
+    pwd = request.data['pass']
+    person_name = request.data['person']    
+    check_admin = check_user_and_group_credential(admin_name, pwd, group_name)
+    check_person = check_user_and_group_credential(name=person_name, group_name=group_name) 
+    time_check = check_inactivity_time(admin_name)
+    if time_check == True:
+        if check_admin == True and check_person == True:
+            group = Group.objects.get(group_name=group_name)
+            person = Person.objects.get(name=person_name)            
+            join_request_result = join_to_group(group_name, person_name, pwd)
+            if join_request_result[1] == True:
+                JoinRequest.objects.filter(person=person, group=group).delete()
+                return({'correct':'person added to group'})
+            else:
+                return join_request_result[0]        
+        else:
+            if check_admin != True:
+                return check_admin
+            if check_person != True:
+                return check_person
+
+@api_view(['POST'])
+def view_join_request(request): # adminName, pass, group
+    group_name = request.data['group_name']
+    name = request.data['name']
+    pwd = request.data['pass'] 
+    check = check_user_and_group_credential(name, pwd, group_name) 
+    if check == True:
+        group = Group.objects.get(group_name=group_name)            
+        join_request = JoinRequest.objects.filter(group=group)
+        print(join_request)
+        join_ser = JoinRequestSerializer(join_request, many=True)
+        return Response({'data':join_ser.data})
+    else:
+        return check
+
+def join_to_group(group_name, name, pwd):    
+    time_check = check_inactivity_time(name)
+    if time_check == True:
+        if Person.objects.filter(name=name, password=pwd).exists():
+            if Group.objects.filter(group_name=group_name).exists():
+                group = Group.objects.get(group_name=group_name)
+                user = Person.objects.get(name=name)
+                if JoinRequest.objects.filter(person=user, group=group).exists():
+                    if group.group_admin.pk == user.pk:
+                        return Response({'error':'group admin cant join group'}), False
+                    if user in group.user_joined.all():
+                        return Response({'error':'you are arleady in this group'}), False    
+                    group.user_joined.add(user)
+                    point = Point(person=user, group=group)
+                    point.save()
+                    user.save()
+                    group.save()
+                    return Response({'correct':'group joined correctly'}), True
+                else: 
+                    return Response({'error':'you need a join request send from admin'})
+            else:
+                return Response({'error':'group does not exist'}), False
+        else:
+            return Response({'error':'credential error'}), False
+    else:
+        return time_check
+
 
 
 
@@ -185,6 +228,7 @@ def check_user_and_group_credential(name=None, pwd=None, group_name=None):
             return Response({'error':'credential error'})
         
 def check_inactivity_time(name):
+    return True
     if Person.objects.filter(name=name).exists():
         person = Person.objects.get(name=name)    
         last_action = person.last_action

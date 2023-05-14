@@ -5,7 +5,7 @@ import datetime
 class Person(models.Model):    
     name = models.CharField(max_length=200, unique=True)    
     password = models.CharField(max_length=60)
-    last_action = models.DateTimeField(datetime.datetime.now)
+    #last_action = models.DateTimeField(datetime.datetime.now)
 
     def __str__(self) -> str:
         return str(self.name)

@@ -20,7 +20,7 @@ class PersonSerializer(serializers.ModelSerializer):
         fields = ['name', 'id']
 
 class JoinRequestSerializer(serializers.ModelSerializer):
-    person = PersonSerializer(many=True)
+    person = serializers.StringRelatedField()
     class Meta:
         model = JoinRequest
         fields = ['person']
