@@ -144,19 +144,43 @@ def accept_join_request(request): # passed argument: name, pass:password, group_
     group_name = request.data['group_name']
     admin_name = request.data['name']
     pwd = request.data['pass']
-    person_name = request.data['person']    
+    person_name = request.data['person']
+    accept = request.data['accept']    
     check_admin = check_user_and_group_credential(admin_name, pwd, group_name)
     check_person = check_user_and_group_credential(name=person_name, group_name=group_name) 
     if check_admin != True:
         return check_admin
     elif check_person != True:
         return check_person
-    jtg_res = join_to_group(group_name, person_name)
+    jtg_res = join_to_group(group_name, person_name, accept)
     if jtg_res == True:
         return Response({'correct':'user join correctly group'})
     else:
         return jtg_res
 
+@api_view(['POST'])
+def remove_from_group(request):
+    group_name = request.data['group_name']
+    admin_name = request.data['name']
+    pwd = request.data['pass']
+    person_name = request.data['person']
+    check_admin = check_user_and_group_credential(admin_name, pwd, group_name)
+    check_person = check_user_and_group_credential(name=person_name, group_name=group_name) 
+    if check_admin != True:
+        return check_admin
+    elif check_person != True:
+        return check_person
+    group = Group.objects.get(group_name=group_name)
+    person = Person.objects.get(name=person_name)
+    if group.group_admin.name == person:
+        return Response({'error':'admin cant exit from group'})
+    if not group.user_joined.filter(id=person.id).exists():
+        return Response({'error':'This user isnt in thi group'})
+    group.user_joined.remove(person)
+    group.save()
+    person.save()
+    return Response({'correct':'User delete correctly'})
+    
 
 @api_view(['POST'])
 def view_join_request(request): # adminName, pass, group
@@ -173,7 +197,7 @@ def view_join_request(request): # adminName, pass, group
     else:
         return check
 
-def join_to_group(group_name, person_name):
+def join_to_group(group_name, person_name, accept):
     group = Group.objects.get(group_name=group_name)
     person = Person.objects.get(name=person_name)
     if group.group_admin.name == person:
@@ -183,11 +207,12 @@ def join_to_group(group_name, person_name):
     if not JoinRequest.objects.filter(group=group, person=person).exists():
         return Response({'error':'you need join request'})
     JoinRequest.objects.get(group=group, person=person).delete()
-    group.user_joined.add(person)
+    if accept == True:
+        group.user_joined.add(person)
     group.save()
     person.save()    
     return True
-
+    
 
 def check_user_and_group_credential(name=None, pwd=None, group_name=None):
     if pwd == None:
