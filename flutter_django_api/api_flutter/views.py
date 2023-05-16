@@ -187,8 +187,8 @@ def view_join_request(request): # adminName, pass, group
         return check
 
 def join_to_group(group_name, name, pwd):
-    if not Person.objects.filter(name=name, password=pwd).exists():
-        return Response({''})
+    group = Group.objects.get(group_name=group_name)
+    user = Person.objects.get(name=name)
     # time_check = check_inactivity_time(name)
     # if time_check == True:
     #     if Person.objects.filter(name=name, password=pwd).exists():
