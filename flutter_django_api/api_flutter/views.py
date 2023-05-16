@@ -147,22 +147,29 @@ def accept_join_request(request): # passed argument: name, pass:password, group_
     person_name = request.data['person']    
     check_admin = check_user_and_group_credential(admin_name, pwd, group_name)
     check_person = check_user_and_group_credential(name=person_name, group_name=group_name) 
-    time_check = check_inactivity_time(admin_name)
-    if time_check == True:
-        if check_admin == True and check_person == True:
-            group = Group.objects.get(group_name=group_name)
-            person = Person.objects.get(name=person_name)            
-            join_request_result = join_to_group(group_name, person_name, pwd)
-            if join_request_result[1] == True:
-                JoinRequest.objects.filter(person=person, group=group).delete()
-                return({'correct':'person added to group'})
-            else:
-                return join_request_result[0]        
-        else:
-            if check_admin != True:
-                return check_admin
-            if check_person != True:
-                return check_person
+    if check_admin != True:
+        return check_admin
+    elif check_person != True:
+        return check_person
+    
+    group = Group.objects.get(group_name=group_name)
+    person = Person.objects.get(name=person_name)
+    # time_check = check_inactivity_time(admin_name)
+    # if time_check == True:
+    #     if check_admin == True and check_person == True:
+    #         group = Group.objects.get(group_name=group_name)
+    #         person = Person.objects.get(name=person_name)            
+    #         join_request_result = join_to_group(group_name, person_name, pwd)
+    #         if join_request_result[1] == True:
+    #             JoinRequest.objects.filter(person=person, group=group).delete()
+    #             return({'correct':'person added to group'})
+    #         else:
+    #             return join_request_result[0]        
+    #     else:
+    #         if check_admin != True:
+    #             return check_admin
+    #         if check_person != True:
+    #             return check_person
 
 @api_view(['POST'])
 def view_join_request(request): # adminName, pass, group
@@ -179,32 +186,34 @@ def view_join_request(request): # adminName, pass, group
     else:
         return check
 
-def join_to_group(group_name, name, pwd):    
-    time_check = check_inactivity_time(name)
-    if time_check == True:
-        if Person.objects.filter(name=name, password=pwd).exists():
-            if Group.objects.filter(group_name=group_name).exists():
-                group = Group.objects.get(group_name=group_name)
-                user = Person.objects.get(name=name)
-                if JoinRequest.objects.filter(person=user, group=group).exists():
-                    if group.group_admin.pk == user.pk:
-                        return Response({'error':'group admin cant join group'}), False
-                    if user in group.user_joined.all():
-                        return Response({'error':'you are arleady in this group'}), False    
-                    group.user_joined.add(user)
-                    point = Point(person=user, group=group)
-                    point.save()
-                    user.save()
-                    group.save()
-                    return Response({'correct':'group joined correctly'}), True
-                else: 
-                    return Response({'error':'you need a join request send from admin'})
-            else:
-                return Response({'error':'group does not exist'}), False
-        else:
-            return Response({'error':'credential error'}), False
-    else:
-        return time_check
+def join_to_group(group_name, name, pwd):
+    if not Person.objects.filter(name=name, password=pwd).exists():
+        return Response({''})
+    # time_check = check_inactivity_time(name)
+    # if time_check == True:
+    #     if Person.objects.filter(name=name, password=pwd).exists():
+    #         if Group.objects.filter(group_name=group_name).exists():
+    #             group = Group.objects.get(group_name=group_name)
+    #             user = Person.objects.get(name=name)
+    #             if JoinRequest.objects.filter(person=user, group=group).exists():
+    #                 if group.group_admin.pk == user.pk:
+    #                     return Response({'error':'group admin cant join group'}), False
+    #                 if user in group.user_joined.all():
+    #                     return Response({'error':'you are arleady in this group'}), False    
+    #                 group.user_joined.add(user)
+    #                 point = Point(person=user, group=group)
+    #                 point.save()
+    #                 user.save()
+    #                 group.save()
+    #                 return Response({'correct':'group joined correctly'}), True
+    #             else: 
+    #                 return Response({'error':'you need a join request send from admin'})
+    #         else:
+    #             return Response({'error':'group does not exist'}), False
+    #     else:
+    #         return Response({'error':'credential error'}), False
+    # else:
+    #     return time_check
 
 
 
