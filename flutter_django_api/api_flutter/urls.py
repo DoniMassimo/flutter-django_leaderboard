@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from . import views
-
+#prova
+# cazzo
 urlpatterns = [
     path('name', view=views.hello_world),
     path('login', view=views.login),
