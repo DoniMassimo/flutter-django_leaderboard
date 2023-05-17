@@ -22,9 +22,9 @@ def login(request):
     name = request.data['name']
     clear_pwd = request.data['pass']
     if Person.objects.filter(name=name, password=clear_pwd).exists(): 
-        person = Person.objects.get(name, password=clear_pwd)
-        person.last_action = datetime.datetime.now()
-        person.save()               
+        # person = Person.objects.get(name, password=clear_pwd)
+        # #person.last_action = datetime.datetime.now()
+        # person.save()               
         return Response({'correct':'user logged correctly'})
     else:
         return Response({'error':'credential does not match'})
@@ -61,6 +61,19 @@ def create_group(request): # passed argument: name:name, pass:password, group_na
     else:
         return time_check
 
+
+@api_view(['POST'])
+def get_group_name(request): # passed argument: name:name, pass:password, group_name:group_name
+    name = request.data['name']
+    pwd = request.data['pass']
+    admin = None
+    if Person.objects.filter(name=name, password=pwd).exists():
+        admin = Person.objects.get(name=name, password=pwd)
+    else:
+        return Response({'error':'credential error'})
+    if Group.objects.filter(group_admin=admin).exists():
+        group_names = Group.objects.filter(group_admin=admin).values_list('group_name', flat=True)
+        return Response({'group_name':group_names})
 
 @api_view(['POST'])
 def get_group_data(request): # passed argument: name:name, pass:password, group_name:group_name

@@ -103,6 +103,66 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Center(child: const Text('Franco gay leaderboard')),
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Sidebar',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              title: Text('My group'),
+              onTap: () {
+                // Azione quando viene selezionata l'opzione 1
+              },
+            ),
+            ListTile(
+              title: Text('Join request'),
+              onTap: () {
+                // Azione quando viene selezionata l'opzione 2
+              },
+            ),
+            ListTile(
+              title: Text('Joined group'),
+              onTap: () {
+                // Azione quando viene selezionata l'opzione 3
+              },
+            ),
+            ExpansionTile(
+              title: Text('My group'),
+              children: <Widget>[
+                ListTile(
+                  title: Text('Sotto-opzione 1'),
+                  onTap: () {
+                    // Azione quando viene selezionata la sotto-opzione 1
+                  },
+                ),
+                ListTile(
+                  title: Text('Sotto-opzione 2'),
+                  onTap: () {
+                    // Azione quando viene selezionata la sotto-opzione 2
+                  },
+                ),
+              ],
+            ),
+            ListTile(
+              title: Text('Opzione 3'),
+              onTap: () {
+                // Azione quando viene selezionata l'opzione 3
+              },
+            ),
+          ],
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -197,3 +257,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+

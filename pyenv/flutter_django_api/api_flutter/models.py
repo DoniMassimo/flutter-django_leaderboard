@@ -24,7 +24,7 @@ class Point(models.Model):
 
 class Group(models.Model):
     group_name = models.CharField(max_length=200, unique=True)
-    group_admin = models.ForeignKey(Person, on_delete=models.CASCADE) 
+    group_admin = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='my_groups') 
     user_joined = models.ManyToManyField(Person, blank=True, related_name='joined_groups')
     
     def __str__(self) -> str:
