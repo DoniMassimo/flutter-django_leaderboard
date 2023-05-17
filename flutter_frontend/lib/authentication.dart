@@ -26,7 +26,7 @@ class AuthenticationState extends State<Authentication> {
       body: jsonEncode(jsonData),
     );
 
-    ret = response.body;
+    ret = jsonDecode(response.body);
     //ret = responseData;
   }
 
