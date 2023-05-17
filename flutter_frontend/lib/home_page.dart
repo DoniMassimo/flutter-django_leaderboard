@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
+// class MyApp extends StatelessWidget {
+//   const MyApp({Key? key}) : super(key: key);
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: HomePage(),
+//     );
+//   }
+// }
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -71,7 +70,9 @@ class _HomePageState extends State<HomePage> {
 
   setStartValue() async {
     //List<dynamic> startval = await getAllUsersData();
-    var startVal = [{'name':'max', 'id':'c@gmail.com', 'score':10}]; 
+    var startVal = [
+      {'name': 'max', 'id': 'c@gmail.com', 'score': 10}
+    ];
     setData(startVal);
   }
 
@@ -106,6 +107,11 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('go back')),
             const SizedBox(
               height: 20,
             ),

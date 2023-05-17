@@ -12,23 +12,22 @@ class Authentication extends StatefulWidget {
 class AuthenticationState extends State<Authentication> {
   String ret = '';
 
-  Future<void> call_api() async {    
-    final url = Uri.parse('http://127.0.0.1:8000/api/login');
+  // Future<void> call_api() async {
+  //   final url = Uri.parse('http://127.0.0.1:8000/api/login');
 
-    final jsonData = {
-      'name': 'John Doe',
-      'pass': 'ciao',
-    };
+  //   final jsonData = {
+  //     'name': 'John Doe',
+  //     'pass': 'ciao',
+  //   };
 
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(jsonData),
-    );
+  //   final response = await http.post(
+  //     url,
+  //     headers: {'Content-Type': 'application/json'},
+  //     body: jsonEncode(jsonData),
+  //   );
 
-    ret = jsonDecode(response.body);
-    //ret = responseData;
-  }
+  //   //ret = responseData;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -38,37 +37,68 @@ class AuthenticationState extends State<Authentication> {
           title: Text('Authentication'),
         ),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              ret,
-              style: TextStyle(
-                  fontSize: 35,
-                  color: Colors.teal,
-                  fontWeight: FontWeight.bold),
-            ),
-            Form(
-                child: Column(
-              children: [
-                TextFormField(
-                  keyboardType: TextInputType.name,
-                  decoration: InputDecoration(
-                      labelText: 'Name',
-                      hintText: 'Enter name',
-                      prefixIcon: Icon(Icons.person),
-                      border: OutlineInputBorder()),
-                  onChanged: (value) {},
-                )
-              ],
-            )),
-            ElevatedButton(
-                onPressed: () {                  
-                  call_api();
-                },
-                child: const Text('pigia'))
-          ],
-        ),
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Login',
+                style: TextStyle(
+                    fontSize: 35,
+                    color: Colors.teal,
+                    fontWeight: FontWeight.bold),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 60, horizontal: 100),
+                child: Form(
+                    child: Column(
+                  children: [
+                    TextFormField(
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                          labelText: 'Name',
+                          hintText: 'Enter name',
+                          prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder()),
+                      onChanged: (value) {},
+                      validator: (value) {
+                        return value!.isEmpty ? "Enter the name" : null;
+                      },
+                    ),
+                    SizedBox(height: 40),
+                    TextFormField(
+                      keyboardType: TextInputType.visiblePassword,
+                      decoration: InputDecoration(
+                          labelText: 'Password',
+                          hintText: 'Enter password',
+                          prefixIcon: Icon(Icons.password),
+                          border: OutlineInputBorder()),
+                      onChanged: (value) {},
+                      validator: (value) {
+                        return value!.isEmpty ? "Enter a password" : null;
+                      },
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),                    
+                      child: MaterialButton(      
+                        height: 60,                  
+                        minWidth: double.infinity,
+                        onPressed: () {},
+                        child: Text(
+                          'Login',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        color: Colors.teal,
+                        textColor: Colors.white,
+                      ),
+                    ),
+                  ],
+                )),
+              ),
+            ]),
       ),
     );
   }
