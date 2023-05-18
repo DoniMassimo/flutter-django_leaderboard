@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prima_prova/home_page.dart';
 import 'api.dart' as api;
+import 'credential.dart' as cr;
 
 class Authentication extends StatefulWidget {
   const Authentication({super.key});
@@ -93,6 +94,8 @@ class AuthenticationState extends State<Authentication> {
                                   error = res['error'];
                                 });
                               } else if (res.containsKey('correct')) {
+                                cr.Credential.name = name;
+                                cr.Credential.password = password;
                                 Navigator.pushNamed(
                                   context,
                                   'home_page',

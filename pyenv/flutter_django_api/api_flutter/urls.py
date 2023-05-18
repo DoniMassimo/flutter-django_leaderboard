@@ -13,5 +13,6 @@ urlpatterns = [
     path('remove_user_from_group', view=views.remove_from_group),
     path('group_data', view=views.get_group_data),
     path('get_group_name', view=views.get_group_name),
+    path('get_joined_group', view=views.get_joined_group),
     path('update_point', view=views.update_point),
 ]

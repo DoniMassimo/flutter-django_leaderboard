@@ -38,4 +38,6 @@ class JoinRequest(models.Model):
     class Meta:
         unique_together = ('person', 'group')
 
+    def __str__(self) -> str:
+        return str(str(self.person) + '-' + str(self.group))
 

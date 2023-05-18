@@ -41,6 +41,7 @@ def register(request):
         return Response({'error':'user already exist'})
 
 
+
 @api_view(['POST'])
 def create_group(request): # passed argument: name:name, pass:password, group_name:group_name
     group_name = request.data['group_name']
@@ -131,6 +132,17 @@ def update_point(request): # group_name, name, pass, updated data {'name':'new p
         return time_check
 
 @api_view(['POST'])
+def get_joined_group(request):
+    name = request.data['name']
+    pwd = request.data['pass']   
+    if Person.objects.filter(name=name, password=pwd).exists():
+        person = Person.objects.get(name=name, password=pwd)
+        joined_groups = person.joined_groups.values_list('group_name', flat=True)
+        return Response({'joined_group':joined_groups})
+    else:
+        return Response({'error':'credential error'})
+
+@api_view(['POST'])
 def send_join_request(request): # passed argument: name: name, pass:password, group_name:group_name
     group_name = request.data['group_name']
     name = request.data['name']
@@ -206,7 +218,7 @@ def view_join_request(request): # adminName, pass, group
         join_request = JoinRequest.objects.filter(group=group)
         print(join_request)
         join_ser = JoinRequestSerializer(join_request, many=True)
-        return Response({'data':join_ser.data})
+        return Response({'join_request':join_ser.data})
     else:
         return check
 

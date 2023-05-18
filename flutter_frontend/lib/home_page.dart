@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'api.dart' as api;
+import 'credential.dart' as cr;
 
 // class MyApp extends StatelessWidget {
 //   const MyApp({Key? key}) : super(key: key);
@@ -19,6 +21,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Widget> sideBar = [];
+
   List<dynamic> _allUsers = [];
 
   void updateUI() {
@@ -66,6 +70,7 @@ class _HomePageState extends State<HomePage> {
   initState() {
     super.initState();
     setStartValue();
+    generateSideBar();
   }
 
   setStartValue() async {
@@ -93,74 +98,88 @@ class _HomePageState extends State<HomePage> {
       _foundUsers = results;
     });
   }
-  // List<Widget> returnPlusMinus(){
 
-  // }
+  void generateSideBar() async {
+    Map<String, dynamic> sideBarData = await api.getSideBarData();
+    List<Widget> listWidget = [];
+    List<Widget> adminGroupWidget = [];
+    sideBarData['administred_group'].forEach((groupName) {
+          adminGroupWidget.add(ListTile(
+            title: Text(groupName),
+            onTap: () {},
+          ));
+        });
+
+    List<Widget> joinedGroupWidget = []; 
+
+    sideBarData['joined_group'].forEach((groupName) {
+          joinedGroupWidget.add(ListTile(
+            title: Text(groupName),
+            onTap: () {},
+          ));
+        });
+
+    listWidget.add(
+      ExpansionTile(
+        title: Text('Administred group'),
+        children: adminGroupWidget,
+      ),
+    );
+    listWidget.add(
+      ListTile(
+        title: Text('Join request'),
+        onTap: () {
+          // Azione quando viene selezionata l'opzione 2
+        },
+      ),
+    );
+    listWidget.add(
+      ExpansionTile(
+        title: Text('Joined group'),
+        children: joinedGroupWidget,
+      ),
+    );
+    listWidget.add(
+      ListTile(
+        title: Text('Send request'),
+        onTap: () {
+          // Azione quando viene selezionata l'opzione 2
+        },
+      ),
+    );
+    sideBar = listWidget;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: const Text('Franco gay leaderboard')),
+        title: Center(child: const Text('Leaderboard')),
       ),
+      onDrawerChanged: (isOpened) {
+        if (isOpened) {
+          generateSideBar();
+        }
+      },
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'Sidebar',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                  child: Text(
+                    'Sidebar',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            ListTile(
-              title: Text('My group'),
-              onTap: () {
-                // Azione quando viene selezionata l'opzione 1
-              },
-            ),
-            ListTile(
-              title: Text('Join request'),
-              onTap: () {
-                // Azione quando viene selezionata l'opzione 2
-              },
-            ),
-            ListTile(
-              title: Text('Joined group'),
-              onTap: () {
-                // Azione quando viene selezionata l'opzione 3
-              },
-            ),
-            ExpansionTile(
-              title: Text('My group'),
-              children: <Widget>[
-                ListTile(
-                  title: Text('Sotto-opzione 1'),
-                  onTap: () {
-                    // Azione quando viene selezionata la sotto-opzione 1
-                  },
-                ),
-                ListTile(
-                  title: Text('Sotto-opzione 2'),
-                  onTap: () {
-                    // Azione quando viene selezionata la sotto-opzione 2
-                  },
-                ),
-              ],
-            ),
-            ListTile(
-              title: Text('Opzione 3'),
-              onTap: () {
-                // Azione quando viene selezionata l'opzione 3
-              },
-            ),
-          ],
+              ] +
+              sideBar,
         ),
       ),
       body: Padding(
@@ -257,4 +276,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
