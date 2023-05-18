@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prima_prova/authentication.dart';
 
+
+
 class AuthMethod extends StatefulWidget {
   const AuthMethod({super.key});
 
@@ -12,7 +14,7 @@ class _AuthMethodState extends State<AuthMethod> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {'authentication': (context) => Authentication()},
+      routes: {'authentication': (context) => const Authentication()},
       home: Builder(builder: (context) {
         return Scaffold(
           appBar: AppBar(

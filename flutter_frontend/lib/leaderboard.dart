@@ -1,31 +1,21 @@
 import 'package:flutter/material.dart';
 import 'api.dart' as api;
-import 'package:prima_prova/leaderboard.dart';
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
 
+class Leaderboard extends StatefulWidget {
+  const Leaderboard({Key? key}) : super(key: key);
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  _LeaderboardState createState() => _LeaderboardState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class _LeaderboardState extends State<Leaderboard> {
   List<Widget> sideBar = [];
 
   List<dynamic> _allUsers = [];
+
+  Map<String, dynamic> userData = {}; 
+
+  Map<dynamic, dynamic> args = {};
 
   void updateUI() {
     setState(() {});
@@ -71,11 +61,13 @@ class _HomePageState extends State<HomePage> {
   @override
   initState() {
     super.initState();
-    setStartValue();    
+    setStartValue();
+    generateSideBar();
   }
 
   setStartValue() async {
-    //List<dynamic> startval = await getAllUsersData();
+    userData = await api.getGroupData(args['group_name']);
+    print('\n\nobject');
     var startVal = [
       {'name': 'max', 'id': 'c@gmail.com', 'score': 10}
     ];
@@ -100,19 +92,14 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void nextPage() {
-    Navigator.pushNamed(context, 'leaderboard',
-        arguments: {'group_name': 'groupName', 'admin': true});
-  }
-
-  void generateSideBar(BuildContext context) async {
+  void generateSideBar() async {
     Map<String, dynamic> sideBarData = await api.getSideBarData();
     List<Widget> listWidget = [];
     List<Widget> adminGroupWidget = [];
     sideBarData['administred_group'].forEach((groupName) {
       adminGroupWidget.add(ListTile(
         title: Text(groupName),
-        onTap: () {          
+        onTap: () {
           Navigator.pushNamed(context, 'leaderboard',
               arguments: {'group_name': groupName, 'admin': true});
         },
@@ -165,6 +152,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    args = ModalRoute.of(context)!.settings.arguments as Map;        
     return MaterialApp(
         routes: {'leaderboard': (context) => (const Leaderboard())},
         home: Builder(builder: (context) {
@@ -174,9 +162,7 @@ class _HomePageState extends State<HomePage> {
             ),
             onDrawerChanged: (isOpened) {
               if (isOpened) {
-                Navigator.pushNamed(context, 'leaderboard',
-                    arguments: {'group_name': 'groupName', 'admin': true});
-                generateSideBar(context);
+                generateSideBar();
               }
             },
             drawer: Drawer(
