@@ -44,7 +44,7 @@ Future<Map<String, dynamic>> updatePoint(
     'name': cr.Credential.name,
     'pass': cr.Credential.password,
     'group_name': groupName,
-    'updated_data': {personName: newPointValue}
+    'data': {personName: newPointValue}
   }, 'api/update_point');
   return responseData;
 }

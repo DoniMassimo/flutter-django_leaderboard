@@ -46,11 +46,17 @@ class _LeaderboardState extends State<Leaderboard> {
   }
 
   void addPoint(int added, {String id = '', String name = ''}) {
-    print('dentro');
+    print(_allUsers);
+    print(id);
+    print(name);
+    if (_allUsers[0]['id'] == id) {
+      print('annamoo');
+    }
     int newPointValue = 0;
     if (id != '' && name != '') {
       var user = _allUsers
-          .firstWhere((user) => user['id'] == id && user['name'] == name);
+          .firstWhere((user) => user['id'].toString() == id && user['name'].toString() == name);
+      print(user);
       user['point'] += added;
       newPointValue = user['point'];
     }
@@ -73,7 +79,6 @@ class _LeaderboardState extends State<Leaderboard> {
     // print(args['group_name']);
     Map<String, dynamic> userData =
         Map.from(await api.getGroupData(args['group_name']));
-    print(userData);
     List<Map<String, dynamic>> startVal = [];
     for (int i = 0; i < userData['user']!.length; i++) {
       int id = userData['user']![i]['id'];
@@ -84,9 +89,7 @@ class _LeaderboardState extends State<Leaderboard> {
             .firstWhere((element) => element['person'] == id)['point']
       });
     }
-    print(startVal);
-
-    setData(startVal);
+    setData(startVal, add: false);
   }
 
   // This function is called whenever the text field changes
