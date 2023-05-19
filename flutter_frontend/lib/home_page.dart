@@ -100,10 +100,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void nextPage() {
-    Navigator.pushNamed(context, 'leaderboard',
-        arguments: {'group_name': 'groupName', 'admin': true});
-  }
 
   void generateSideBar(BuildContext context) async {
     Map<String, dynamic> sideBarData = await api.getSideBarData();
@@ -174,8 +170,8 @@ class _HomePageState extends State<HomePage> {
             ),
             onDrawerChanged: (isOpened) {
               if (isOpened) {
-                Navigator.pushNamed(context, 'leaderboard',
-                    arguments: {'group_name': 'groupName', 'admin': true});
+                // Navigator.pushNamed(context, 'leaderboard',
+                //     arguments: {'group_name': 'groupName', 'admin': true});
                 generateSideBar(context);
               }
             },

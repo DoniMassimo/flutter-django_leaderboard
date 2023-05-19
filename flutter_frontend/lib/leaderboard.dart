@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'api.dart' as api;
 
-
 class Leaderboard extends StatefulWidget {
   const Leaderboard({Key? key}) : super(key: key);
   @override
@@ -13,9 +12,11 @@ class _LeaderboardState extends State<Leaderboard> {
 
   List<dynamic> _allUsers = [];
 
-  Map<String, dynamic> userData = {}; 
+  Map<String, List<Map<String, dynamic>>> userData = {};
 
   Map<dynamic, dynamic> args = {};
+
+  bool firstBulid = true;
 
   void updateUI() {
     setState(() {});
@@ -37,23 +38,26 @@ class _LeaderboardState extends State<Leaderboard> {
     } else {
       _allUsers = users;
     }
-    _allUsers.sort((a, b) => b['score'].compareTo(a['score']));
+    _allUsers.sort((a, b) => b['point'].compareTo(a['point']));
     setPosition();
     setState(() {
       _foundUsers = _allUsers;
     });
   }
 
-  void addScore(int added, {String id = '', String name = ''}) {
+  void addPoint(int added, {String id = '', String name = ''}) {
+    print('dentro');
+    int newPointValue = 0;
     if (id != '' && name != '') {
       var user = _allUsers
           .firstWhere((user) => user['id'] == id && user['name'] == name);
-      user['score'] += added;
+      user['point'] += added;
+      newPointValue = user['point'];
     }
-    _allUsers.sort((a, b) => b['score'].compareTo(a['score']));
+    _allUsers.sort((a, b) => b['point'].compareTo(a['point']));
     setPosition();
     setState(() {});
-    //setScore(added, id, name);
+    api.updatePoint(name, args['group_name'], newPointValue);
   }
 
   // This list holds the data for the list view
@@ -61,16 +65,27 @@ class _LeaderboardState extends State<Leaderboard> {
   @override
   initState() {
     super.initState();
-    setStartValue();
     generateSideBar();
   }
 
   setStartValue() async {
-    userData = await api.getGroupData(args['group_name']);
-    print('\n\nobject');
-    var startVal = [
-      {'name': 'max', 'id': 'c@gmail.com', 'score': 10}
-    ];
+    // print('gruppi');
+    // print(args['group_name']);
+    Map<String, dynamic> userData =
+        Map.from(await api.getGroupData(args['group_name']));
+    print(userData);
+    List<Map<String, dynamic>> startVal = [];
+    for (int i = 0; i < userData['user']!.length; i++) {
+      int id = userData['user']![i]['id'];
+      startVal.add({
+        'name': userData['user']![i]['name'],
+        'id': id,
+        'point': userData['point']!
+            .firstWhere((element) => element['person'] == id)['point']
+      });
+    }
+    print(startVal);
+
     setData(startVal);
   }
 
@@ -152,13 +167,28 @@ class _LeaderboardState extends State<Leaderboard> {
 
   @override
   Widget build(BuildContext context) {
-    args = ModalRoute.of(context)!.settings.arguments as Map;        
+    args = ModalRoute.of(context)!.settings.arguments as Map;
+    if (firstBulid) {
+      setStartValue();
+      firstBulid = false;
+    }
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         routes: {'leaderboard': (context) => (const Leaderboard())},
         home: Builder(builder: (context) {
           return Scaffold(
             appBar: AppBar(
               title: Center(child: const Text('Leaderboard')),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, 'leaderboard', arguments: {
+                        'group_name': args['group_name'],
+                        'admin': args['admin']
+                      });
+                    },
+                    icon: const Icon(Icons.refresh))
+              ],
             ),
             onDrawerChanged: (isOpened) {
               if (isOpened) {
@@ -230,14 +260,14 @@ class _LeaderboardState extends State<Leaderboard> {
                                               size: 30,
                                               color: Colors.white,
                                             ),
-                                            onPressed: () => addScore(-1,
+                                            onPressed: () => addPoint(-1,
                                                 id: _foundUsers[index]['id']
                                                     .toString(),
                                                 name: _foundUsers[index]
                                                     ['name']),
                                           ),
                                           Text(
-                                              _foundUsers[index]['score']
+                                              _foundUsers[index]['point']
                                                   .toString(),
                                               style: TextStyle(
                                                   fontSize: 20,
@@ -250,7 +280,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                                 size: 30,
                                                 color: Colors.white,
                                               ),
-                                              onPressed: () => addScore(1,
+                                              onPressed: () => addPoint(1,
                                                   id: _foundUsers[index]['id']
                                                       .toString(),
                                                   name: _foundUsers[index]
@@ -267,7 +297,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 30)),
                                 subtitle: Text(
-                                    'Score: ${_foundUsers[index]["score"].toString()}',
+                                    'Score: ${_foundUsers[index]["point"].toString()}',
                                     style: TextStyle(color: Colors.white)),
                               ),
                             ),

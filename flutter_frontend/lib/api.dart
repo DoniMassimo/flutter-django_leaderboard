@@ -11,7 +11,8 @@ Future<Map<String, dynamic>> connectToApi(
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(data),
   );
-  Map<String, dynamic> responseData = jsonDecode(response.body);
+  Map<String, dynamic> responseData =
+      jsonDecode(response.body) as Map<String, dynamic>;
   return responseData;
 }
 
@@ -29,12 +30,22 @@ Future<List<dynamic>> getGroupName() async {
 }
 
 Future<Map<String, dynamic>> getGroupData(String groupName) async {
-  var responseData = await connectToApi({
+  Map<String, dynamic> responseData = await connectToApi({
     'name': cr.Credential.name,
     'pass': cr.Credential.password,
     'group_name': groupName
-  }, 'api/get_group_data');
-  print(responseData);
+  }, 'api/group_data');
+  return responseData;
+}
+
+Future<Map<String, dynamic>> updatePoint(
+    String personName, String groupName, int newPointValue) async {
+  Map<String, dynamic> responseData = await connectToApi({
+    'name': cr.Credential.name,
+    'pass': cr.Credential.password,
+    'group_name': groupName,
+    'updated_data': {personName: newPointValue}
+  }, 'api/update_point');
   return responseData;
 }
 
@@ -61,8 +72,5 @@ Future<Map<String, dynamic>> getSideBarData() async {
     'administred_group': fetchedData[0],
     'joined_group': fetchedData[1]
   };
-  print(sideBarData);
   return sideBarData;
 }
-
-

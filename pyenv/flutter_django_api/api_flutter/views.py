@@ -234,6 +234,8 @@ def join_to_group(group_name, person_name, accept):
     JoinRequest.objects.get(group=group, person=person).delete()
     if accept == True:
         group.user_joined.add(person)
+        point = Point(person=person, group=group)
+        point.save()
     group.save()
     person.save()    
     return True
