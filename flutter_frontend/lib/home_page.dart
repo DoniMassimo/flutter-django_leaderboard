@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'api.dart' as api;
 import 'package:prima_prova/leaderboard.dart';
+import 'widget_generator.dart' as wg;
 
 class MyWidget extends StatefulWidget {
   const MyWidget({super.key});
@@ -100,69 +101,16 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
-  void generateSideBar(BuildContext context) async {
-    Map<String, dynamic> sideBarData = await api.getSideBarData();
-    List<Widget> listWidget = [];
-    List<Widget> adminGroupWidget = [];
-    sideBarData['administred_group'].forEach((groupName) {
-      adminGroupWidget.add(ListTile(
-        title: Text(groupName),
-        onTap: () {          
-          Navigator.pushNamed(context, 'leaderboard',
-              arguments: {'group_name': groupName, 'admin': true});
-        },
-      ));
+  void setStateCallback() {
+    setState(() {
+      
     });
-
-    List<Widget> joinedGroupWidget = [];
-
-    sideBarData['joined_group'].forEach((groupName) {
-      joinedGroupWidget.add(ListTile(
-        title: Text(groupName),
-        onTap: () {
-          Navigator.pushNamed(context, 'leaderboard',
-              arguments: {'group_name': groupName, 'admin': false});
-        },
-      ));
-    });
-
-    listWidget.add(
-      ExpansionTile(
-        title: Text('Administred group'),
-        children: adminGroupWidget,
-      ),
-    );
-    listWidget.add(
-      ListTile(
-        title: Text('Join request'),
-        onTap: () {
-          // Azione quando viene selezionata l'opzione 2
-        },
-      ),
-    );
-    listWidget.add(
-      ExpansionTile(
-        title: Text('Joined group'),
-        children: joinedGroupWidget,
-      ),
-    );
-    listWidget.add(
-      ListTile(
-        title: Text('Send request'),
-        onTap: () {
-          // Azione quando viene selezionata l'opzione 2
-        },
-      ),
-    );
-    sideBar = listWidget;
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        routes: {'leaderboard': (context) => (const Leaderboard())},
+        routes: wg.generateSidebarRoutes(context),
         home: Builder(builder: (context) {
           return Scaffold(
             appBar: AppBar(
@@ -170,9 +118,7 @@ class _HomePageState extends State<HomePage> {
             ),
             onDrawerChanged: (isOpened) {
               if (isOpened) {
-                // Navigator.pushNamed(context, 'leaderboard',
-                //     arguments: {'group_name': 'groupName', 'admin': true});
-                generateSideBar(context);
+                wg.generateSideBar(context, sideBar, setStateCallback);
               }
             },
             drawer: Drawer(

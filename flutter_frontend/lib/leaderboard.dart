@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'api.dart' as api;
+import 'widget_generator.dart' as wg;
+import 'send_request.dart';
 
 class Leaderboard extends StatefulWidget {
   const Leaderboard({Key? key}) : super(key: key);
@@ -46,16 +48,13 @@ class _LeaderboardState extends State<Leaderboard> {
   }
 
   void addPoint(int added, {String id = '', String name = ''}) {
-    print(_allUsers);
-    print(id);
-    print(name);
     if (_allUsers[0]['id'] == id) {
       print('annamoo');
     }
     int newPointValue = 0;
     if (id != '' && name != '') {
-      var user = _allUsers
-          .firstWhere((user) => user['id'].toString() == id && user['name'].toString() == name);
+      var user = _allUsers.firstWhere((user) =>
+          user['id'].toString() == id && user['name'].toString() == name);
       print(user);
       user['point'] += added;
       newPointValue = user['point'];
@@ -71,7 +70,6 @@ class _LeaderboardState extends State<Leaderboard> {
   @override
   initState() {
     super.initState();
-    generateSideBar();
   }
 
   setStartValue() async {
@@ -110,61 +108,7 @@ class _LeaderboardState extends State<Leaderboard> {
     });
   }
 
-  void generateSideBar() async {
-    Map<String, dynamic> sideBarData = await api.getSideBarData();
-    List<Widget> listWidget = [];
-    List<Widget> adminGroupWidget = [];
-    sideBarData['administred_group'].forEach((groupName) {
-      adminGroupWidget.add(ListTile(
-        title: Text(groupName),
-        onTap: () {
-          Navigator.pushNamed(context, 'leaderboard',
-              arguments: {'group_name': groupName, 'admin': true});
-        },
-      ));
-    });
-
-    List<Widget> joinedGroupWidget = [];
-
-    sideBarData['joined_group'].forEach((groupName) {
-      joinedGroupWidget.add(ListTile(
-        title: Text(groupName),
-        onTap: () {
-          Navigator.pushNamed(context, 'leaderboard',
-              arguments: {'group_name': groupName, 'admin': false});
-        },
-      ));
-    });
-
-    listWidget.add(
-      ExpansionTile(
-        title: Text('Administred group'),
-        children: adminGroupWidget,
-      ),
-    );
-    listWidget.add(
-      ListTile(
-        title: Text('Join request'),
-        onTap: () {
-          // Azione quando viene selezionata l'opzione 2
-        },
-      ),
-    );
-    listWidget.add(
-      ExpansionTile(
-        title: Text('Joined group'),
-        children: joinedGroupWidget,
-      ),
-    );
-    listWidget.add(
-      ListTile(
-        title: Text('Send request'),
-        onTap: () {
-          // Azione quando viene selezionata l'opzione 2
-        },
-      ),
-    );
-    sideBar = listWidget;
+  void setStateCallback() {
     setState(() {});
   }
 
@@ -177,7 +121,7 @@ class _LeaderboardState extends State<Leaderboard> {
     }
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        routes: {'leaderboard': (context) => (const Leaderboard())},
+          routes: wg.generateSidebarRoutes(context),
         home: Builder(builder: (context) {
           return Scaffold(
             appBar: AppBar(
@@ -195,7 +139,7 @@ class _LeaderboardState extends State<Leaderboard> {
             ),
             onDrawerChanged: (isOpened) {
               if (isOpened) {
-                generateSideBar();
+                wg.generateSideBar(context, sideBar, setStateCallback);
               }
             },
             drawer: Drawer(
@@ -254,41 +198,52 @@ class _LeaderboardState extends State<Leaderboard> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Padding(
-                                        padding: const EdgeInsets.all(0.0),
-                                        child: Row(children: [
-                                          IconButton(
-                                            iconSize: 10,
-                                            icon: const Icon(
-                                              Icons.remove,
-                                              size: 30,
-                                              color: Colors.white,
-                                            ),
-                                            onPressed: () => addPoint(-1,
-                                                id: _foundUsers[index]['id']
-                                                    .toString(),
-                                                name: _foundUsers[index]
-                                                    ['name']),
-                                          ),
-                                          Text(
+                                      padding: const EdgeInsets.all(0.0),
+                                      child: args['admin'] == true
+                                          ? Row(children: [
+                                              IconButton(
+                                                iconSize: 10,
+                                                icon: const Icon(
+                                                  Icons.remove,
+                                                  size: 30,
+                                                  color: Colors.white,
+                                                ),
+                                                onPressed: () => addPoint(-1,
+                                                    id: _foundUsers[index]['id']
+                                                        .toString(),
+                                                    name: _foundUsers[index]
+                                                        ['name']),
+                                              ),
+                                              Text(
+                                                  _foundUsers[index]['point']
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white)),
+                                              IconButton(
+                                                  iconSize: 10,
+                                                  icon: Icon(
+                                                    Icons.add,
+                                                    size: 30,
+                                                    color: Colors.white,
+                                                  ),
+                                                  onPressed: () => addPoint(1,
+                                                      id: _foundUsers[index]
+                                                              ['id']
+                                                          .toString(),
+                                                      name: _foundUsers[index]
+                                                          ['name']))
+                                            ])
+                                          : Text(
                                               _foundUsers[index]['point']
                                                   .toString(),
                                               style: TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white)),
-                                          IconButton(
-                                              iconSize: 10,
-                                              icon: Icon(
-                                                Icons.add,
-                                                size: 30,
-                                                color: Colors.white,
-                                              ),
-                                              onPressed: () => addPoint(1,
-                                                  id: _foundUsers[index]['id']
-                                                      .toString(),
-                                                  name: _foundUsers[index]
-                                                      ['name']))
-                                        ]))
+                                    )
                                   ],
                                 ),
                                 leading: Text(

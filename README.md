@@ -2,7 +2,7 @@
 
 - Migliorare funzione get data
 - auth di drf
-- api pernde nome e password dalla classe credential
+- [ ] gestione migliore errori
 
 
 - gruppi amministrati
