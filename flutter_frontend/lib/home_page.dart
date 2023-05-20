@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'api.dart' as api;
-import 'package:prima_prova/leaderboard.dart';
+
 import 'widget_generator.dart' as wg;
 
 class MyWidget extends StatefulWidget {

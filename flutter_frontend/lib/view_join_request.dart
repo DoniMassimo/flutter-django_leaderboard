@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'api.dart' as api;
 import 'widget_generator.dart' as wg;
 
-
-class Leaderboard extends StatefulWidget {
-  const Leaderboard({Key? key}) : super(key: key);
+class ViewJoinRequest extends StatefulWidget {
+  const ViewJoinRequest({Key? key}) : super(key: key);
   @override
-  _LeaderboardState createState() => _LeaderboardState();
+  _ViewJoinRequestState createState() => _ViewJoinRequestState();
 }
 
-class _LeaderboardState extends State<Leaderboard> {
+class _ViewJoinRequestState extends State<ViewJoinRequest> {
   List<Widget> sideBar = [];
 
   List<dynamic> _allUsers = [];
@@ -19,6 +18,10 @@ class _LeaderboardState extends State<Leaderboard> {
   Map<dynamic, dynamic> args = {};
 
   bool firstBulid = true;
+
+  List<dynamic> groupsNames = [];
+
+  List<List<ListTile>> accepRefuseWidgets = [];
 
   void updateUI() {
     setState(() {});
@@ -104,24 +107,82 @@ class _LeaderboardState extends State<Leaderboard> {
     });
   }
 
+  void setListTileWidget() async {
+    List<List<ListTile>> newAccpetRefuseWidget = [];
+    groupsNames.forEach((groupName) async {
+      newAccpetRefuseWidget.add([]);
+      List<dynamic> joinRequest = await api.getJoinRequest(groupName);
+      joinRequest.forEach((request) {
+        ListTile widget = ListTile(
+          title: Text(
+            request['person'].toString(),
+            style: TextStyle(fontSize: 20, color: Colors.white),
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                  padding: const EdgeInsets.all(0.0),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          await api.acceptJoinRequest(
+                              groupName, request['person'], false);
+                          setGroupNameValue();
+                        },
+                        icon: const Icon(Icons.close),
+                        color: Color.fromARGB(255, 255, 0, 0),
+                        iconSize: 30,
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          await api.acceptJoinRequest(
+                              groupName, request['person'], true);
+                          setGroupNameValue();
+                        },
+                        icon: const Icon(Icons.check),
+                        color: Color.fromARGB(255, 163, 255, 167),
+                        iconSize: 30,
+                      ),
+                    ],
+                  ))
+            ],
+          ),
+        );
+        int index = groupsNames.indexOf(groupName);
+        newAccpetRefuseWidget[index].add(widget);
+      });
+    });
+    accepRefuseWidgets.clear();
+    accepRefuseWidgets = newAccpetRefuseWidget;
+    setState(() {});
+  }
+
+  void setGroupNameValue() async {
+    groupsNames = await api.getGroupName();
+    setState(() {});
+    setListTileWidget();
+  }
+
   void setStateCallback() {
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    args = ModalRoute.of(context)!.settings.arguments as Map;
+    // args = ModalRoute.of(context)!.settings.arguments as Map;
     if (firstBulid) {
-      setStartValue();
+      setGroupNameValue();
       firstBulid = false;
     }
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-          routes: wg.generateSidebarRoutes(context),
+        routes: wg.generateSidebarRoutes(context),
         home: Builder(builder: (context) {
           return Scaffold(
             appBar: AppBar(
-              title: Center(child: const Text('Leaderboard')),
+              title: Center(child: const Text('ViewJoinRequest')),
               actions: [
                 IconButton(
                     onPressed: () {
@@ -181,77 +242,24 @@ class _LeaderboardState extends State<Leaderboard> {
                     height: 20,
                   ),
                   Expanded(
-                    child: _foundUsers.isNotEmpty
+                    child: groupsNames.isNotEmpty
                         ? ListView.builder(
-                            itemCount: _foundUsers.length,
+                            itemCount: groupsNames.length,
                             itemBuilder: (context, index) => Card(
-                              key: ValueKey(_foundUsers[index]["id"]),
+                              key: ValueKey(groupsNames[index]),
                               color: Colors.blue,
                               elevation: 4,
                               margin: const EdgeInsets.symmetric(vertical: 10),
-                              child: ListTile(
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(0.0),
-                                      child: args['admin'] == true
-                                          ? Row(children: [
-                                              IconButton(
-                                                iconSize: 10,
-                                                icon: const Icon(
-                                                  Icons.remove,
-                                                  size: 30,
-                                                  color: Colors.white,
-                                                ),
-                                                onPressed: () => addPoint(-1,
-                                                    id: _foundUsers[index]['id']
-                                                        .toString(),
-                                                    name: _foundUsers[index]
-                                                        ['name']),
-                                              ),
-                                              Text(
-                                                  _foundUsers[index]['point']
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white)),
-                                              IconButton(
-                                                  iconSize: 10,
-                                                  icon: Icon(
-                                                    Icons.add,
-                                                    size: 30,
-                                                    color: Colors.white,
-                                                  ),
-                                                  onPressed: () => addPoint(1,
-                                                      id: _foundUsers[index]
-                                                              ['id']
-                                                          .toString(),
-                                                      name: _foundUsers[index]
-                                                          ['name']))
-                                            ])
-                                          : Text(
-                                              _foundUsers[index]['point']
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white)),
-                                    )
-                                  ],
-                                ),
-                                leading: Text(
-                                  (_foundUsers[index]['pos']).toString(),
-                                  style: const TextStyle(
-                                      fontSize: 30, color: Colors.white),
-                                ),
-                                title: Text(_foundUsers[index]['name'],
+                              child: ExpansionTile(
+                                onExpansionChanged: (value) {
+                                  if (value) {}
+                                },
+                                children: accepRefuseWidgets[index],
+                                title: Text(groupsNames[index],
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 30)),
                                 subtitle: Text(
-                                    'Score: ${_foundUsers[index]["point"].toString()}',
+                                    'Request: ${accepRefuseWidgets[index].length.toString()}',
                                     style: TextStyle(color: Colors.white)),
                               ),
                             ),

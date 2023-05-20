@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'api.dart' as api;
 import 'leaderboard.dart';
 import 'send_request.dart';
+import 'create_group.dart';
+import 'view_join_request.dart';
 
 void generateSideBar(BuildContext context, List<Widget> sideBar,
     Function setStateCallback) async {
   Map<String, dynamic> sideBarData = await api.getSideBarData();
   List<Widget> listWidget = [];
   List<Widget> adminGroupWidget = [];
+
   sideBarData['administred_group'].forEach((groupName) {
     adminGroupWidget.add(ListTile(
       title: Text(groupName),
@@ -38,9 +41,17 @@ void generateSideBar(BuildContext context, List<Widget> sideBar,
   );
   listWidget.add(
     ListTile(
-      title: Text('Join request'),
+      title: Text('View join request'),
       onTap: () {
-        // Azione quando viene selezionata l'opzione 2
+        Navigator.pushNamed(context, 'view_join_request');
+      },
+    ),
+  );
+  listWidget.add(
+    ListTile(
+      title: Text('Create new group '),
+      onTap: () {
+        Navigator.pushNamed(context, 'create_group');
       },
     ),
   );
@@ -65,6 +76,9 @@ void generateSideBar(BuildContext context, List<Widget> sideBar,
 Map<String, Widget Function(BuildContext)> generateSidebarRoutes(BuildContext context) {
   return {
     'leaderboard': (context) => (const Leaderboard()),
-    'send_request': (context) => (const SendRequest())
+    'send_request': (context) => (const SendRequest()),
+    'create_group': (context) => (const CreateGroup()),
+    'view_join_request': (context) => (const ViewJoinRequest())
   };
 }
+

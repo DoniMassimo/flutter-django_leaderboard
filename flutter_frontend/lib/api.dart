@@ -22,6 +22,12 @@ Future<Map<String, dynamic>> login(String name, String password) async {
   return responseData;
 }
 
+Future<Map<String, dynamic>> register(String name, String password) async {
+  Map<String, dynamic> responseData =
+      await connectToApi({'name': name, 'pass': password}, 'api/register');
+  return responseData;
+}
+
 Future<List<dynamic>> getGroupName() async {
   Map<String, dynamic> responseData = await connectToApi(
       {'name': cr.Credential.name, 'pass': cr.Credential.password},
@@ -61,9 +67,20 @@ Future<List<dynamic>> getJoinRequest(String groupName) async {
     'name': cr.Credential.name,
     'pass': cr.Credential.password,
     'group_name': groupName
-  }, 'api/get_join_req');
-
+  }, 'api/view_join_req');
   return joinRequest['join_request'];
+}
+
+Future<Map<String, dynamic>> acceptJoinRequest(
+    String groupName, String personName, bool accept) async {
+  Map<String, dynamic> joinRequest = await connectToApi({
+    'name': cr.Credential.name,
+    'pass': cr.Credential.password,
+    'group_name': groupName,
+    'person': personName,
+    'accept': accept
+  }, 'api/accept_join_req');
+  return joinRequest;
 }
 
 Future<Map<String, dynamic>> getSideBarData() async {
@@ -75,3 +92,20 @@ Future<Map<String, dynamic>> getSideBarData() async {
   return sideBarData;
 }
 
+Future<Map<String, dynamic>> sendJoinRequest(String groupName) async {
+  Map<String, dynamic> apiResult = await connectToApi({
+    'name': cr.Credential.name,
+    'pass': cr.Credential.password,
+    'group_name': groupName
+  }, 'api/send_join_req');
+  return apiResult;
+}
+
+Future<Map<String, dynamic>> createGroup(String groupName) async {
+  Map<String, dynamic> apiResult = await connectToApi({
+    'name': cr.Credential.name,
+    'pass': cr.Credential.password,
+    'group_name': groupName
+  }, 'api/create_group');
+  return apiResult;
+}

@@ -64,7 +64,7 @@ def create_group(request): # passed argument: name:name, pass:password, group_na
 
 
 @api_view(['POST'])
-def get_group_name(request): # passed argument: name:name, pass:password, group_name:group_name
+def get_groups_names(request): # passed argument: name:name, pass:password, group_name:group_name
     name = request.data['name']
     pwd = request.data['pass']
     admin = None
@@ -75,6 +75,8 @@ def get_group_name(request): # passed argument: name:name, pass:password, group_
     if Group.objects.filter(group_admin=admin).exists():
         group_names = Group.objects.filter(group_admin=admin).values_list('group_name', flat=True)
         return Response({'group_name':group_names})
+    else:
+        return Response({'group_name':[]})
 
 @api_view(['POST'])
 def get_group_data(request): # passed argument: name:name, pass:password, group_name:group_name

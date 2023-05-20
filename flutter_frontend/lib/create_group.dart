@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'widget_generator.dart' as wg;
 import 'api.dart' as api;
 
-class SendRequest extends StatefulWidget {
-  const SendRequest({Key? key}) : super(key: key);
+class CreateGroup extends StatefulWidget {
+  const CreateGroup({Key? key}) : super(key: key);
   @override
-  _SendRequestState createState() => _SendRequestState();
+  _CreateGroupState createState() => _CreateGroupState();
 }
 
-class _SendRequestState extends State<SendRequest> {
+class _CreateGroupState extends State<CreateGroup> {
   List<Widget> sideBar = [];
 
   Map<dynamic, dynamic> args = {};
@@ -41,7 +41,7 @@ class _SendRequestState extends State<SendRequest> {
         home: Builder(builder: (context) {
           return Scaffold(
               appBar: AppBar(
-                title: Center(child: const Text('SendRequest')),
+                title: Center(child: const Text('CreateGroup')),
                 actions: [
                   IconButton(
                       onPressed: () {
@@ -115,7 +115,7 @@ class _SendRequestState extends State<SendRequest> {
                               height: 60,
                               minWidth: double.infinity,
                               onPressed: () async {
-                                Map<String, dynamic> res = await api.sendJoinRequest(groupName);
+                                Map<String, dynamic> res = await api.createGroup(groupName);
                                 if (res.containsKey('correct')) {
                                   apiResult = res['correct'];
                                   apiResultColor = Colors.green;
@@ -129,7 +129,7 @@ class _SendRequestState extends State<SendRequest> {
                                 });
                               },
                               child: Text(
-                                'Send request',
+                                'Create group',
                                 style: TextStyle(fontSize: 20),
                               ),
                               color: Colors.teal,
