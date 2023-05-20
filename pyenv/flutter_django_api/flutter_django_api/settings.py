@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api_flutter',     
     "corsheaders",
+    'serve_flutter',
 ]
 
 MIDDLEWARE = [

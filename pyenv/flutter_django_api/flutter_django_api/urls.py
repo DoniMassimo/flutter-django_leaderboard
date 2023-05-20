@@ -19,4 +19,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api_flutter.urls')),
+    path('leaderboard/', include('serve_flutter.urls'))
 ]
