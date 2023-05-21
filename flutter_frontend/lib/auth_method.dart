@@ -24,7 +24,7 @@ class _AuthMethodState extends State<AuthMethod> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Welcome',
                   style: TextStyle(
                       fontSize: 35,

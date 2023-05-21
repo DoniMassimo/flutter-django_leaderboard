@@ -155,6 +155,8 @@ def send_join_request(request): # passed argument: name: name, pass:password, gr
         if check == True:
             person = Person.objects.get(name=name)
             group = Group.objects.get(group_name=group_name)
+            if Group.objects.filter(user_joined=person).exists():
+                return Response({'error':'you are arleady in this group'})
             if not JoinRequest.objects.filter(person=person, group=group).exists():
                 join_request = JoinRequest(person=person, group=group)
                 join_request.save()
@@ -227,7 +229,7 @@ def view_join_request(request): # adminName, pass, group
 def join_to_group(group_name, person_name, accept):
     group = Group.objects.get(group_name=group_name)
     person = Person.objects.get(name=person_name)
-    if group.group_admin.name == person:
+    if group.group_admin.name == person.name:
         return Response({'error':'admin cant join this group'})
     if group.user_joined.filter(id=person.id).exists():
         return Response({'error':'This usere is arleady in thi group'})

@@ -11,7 +11,6 @@ class ViewJoinRequest extends StatefulWidget {
 class _ViewJoinRequestState extends State<ViewJoinRequest> {
   List<Widget> sideBar = [];
 
-
   Map<String, List<Map<String, dynamic>>> userData = {};
 
   Map<dynamic, dynamic> args = {};
@@ -25,14 +24,11 @@ class _ViewJoinRequestState extends State<ViewJoinRequest> {
   void updateUI() {
     setState(() {});
   }
-  
+
   @override
   initState() {
     super.initState();
   }
-
-
-
 
   void setListTileWidget() async {
     List<List<ListTile>> newAccpetRefuseWidget = [];
@@ -43,7 +39,7 @@ class _ViewJoinRequestState extends State<ViewJoinRequest> {
         ListTile widget = ListTile(
           title: Text(
             request['person'].toString(),
-            style: TextStyle(fontSize: 20, color: Colors.white),
+            style: const TextStyle(fontSize: 20, color: Colors.white),
           ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
@@ -69,7 +65,7 @@ class _ViewJoinRequestState extends State<ViewJoinRequest> {
                           setGroupNameValue();
                         },
                         icon: const Icon(Icons.check),
-                        color: Color.fromARGB(255, 163, 255, 167),
+                        color: const Color.fromARGB(255, 163, 255, 167),
                         iconSize: 30,
                       ),
                     ],
@@ -109,14 +105,11 @@ class _ViewJoinRequestState extends State<ViewJoinRequest> {
         home: Builder(builder: (context) {
           return Scaffold(
             appBar: AppBar(
-              title: Center(child: const Text('ViewJoinRequest')),
+              title: const Center(child: Text('ViewJoinRequest')),
               actions: [
                 IconButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, 'leaderboard', arguments: {
-                        'group_name': args['group_name'],
-                        'admin': args['admin']
-                      });
+                      Navigator.pushNamed(context, 'view_join_request');
                     },
                     icon: const Icon(Icons.refresh))
               ],
@@ -150,14 +143,6 @@ class _ViewJoinRequestState extends State<ViewJoinRequest> {
               padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('go back')),
-                  const SizedBox(
-                    height: 20,
-                  ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -173,13 +158,13 @@ class _ViewJoinRequestState extends State<ViewJoinRequest> {
                               child: ExpansionTile(
                                 onExpansionChanged: (value) {
                                   if (value) {}
-                                },                                
+                                },
                                 title: Text(groupsNames[index],
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 30)),
+                                    style: const TextStyle(
+                                        color:  Colors.white, fontSize: 30)),
                                 subtitle: Text(
                                     'Request: ${accepRefuseWidgets[index].length.toString()}',
-                                    style: TextStyle(color: Colors.white)),
+                                    style: const TextStyle(color: Colors.white)),
                                 children: accepRefuseWidgets[index],
                               ),
                             ),

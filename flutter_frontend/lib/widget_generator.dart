@@ -35,13 +35,13 @@ void generateSideBar(BuildContext context, List<Widget> sideBar,
 
   listWidget.add(
     ExpansionTile(
-      title: Text('Administred group'),
+      title: const Text('Administred group'),
       children: adminGroupWidget,
     ),
   );
   listWidget.add(
     ListTile(
-      title: Text('View join request'),
+      title: const Text('View join request'),
       onTap: () {
         Navigator.pushNamed(context, 'view_join_request');
       },
@@ -49,7 +49,7 @@ void generateSideBar(BuildContext context, List<Widget> sideBar,
   );
   listWidget.add(
     ListTile(
-      title: Text('Create new group '),
+      title: const Text('Create new group '),
       onTap: () {
         Navigator.pushNamed(context, 'create_group');
       },
@@ -57,13 +57,13 @@ void generateSideBar(BuildContext context, List<Widget> sideBar,
   );
   listWidget.add(
     ExpansionTile(
-      title: Text('Joined group'),
+      title: const Text('Joined group'),
       children: joinedGroupWidget,
     ),
   );
   listWidget.add(
     ListTile(
-      title: Text('Send request'),
+      title: const Text('Send request'),
       onTap: () {
         Navigator.pushNamed(context, 'send_request');
       },

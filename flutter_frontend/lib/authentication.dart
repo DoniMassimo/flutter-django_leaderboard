@@ -32,7 +32,7 @@ class AuthenticationState extends State<Authentication> {
               children: [
                 Text(
                   args,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 35,
                       color: Colors.teal,
                       fontWeight: FontWeight.bold),
@@ -45,7 +45,7 @@ class AuthenticationState extends State<Authentication> {
                     children: [
                       TextFormField(
                         keyboardType: TextInputType.name,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             labelText: 'Name',
                             hintText: 'Enter name',
                             prefixIcon: Icon(Icons.person),
@@ -54,10 +54,10 @@ class AuthenticationState extends State<Authentication> {
                           name = value;
                         },
                       ),
-                      SizedBox(height: 40),
+                      const SizedBox(height: 40),
                       TextFormField(
                         keyboardType: TextInputType.visiblePassword,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             labelText: 'Password',
                             hintText: 'Enter password',
                             prefixIcon: Icon(Icons.password),
@@ -66,7 +66,7 @@ class AuthenticationState extends State<Authentication> {
                           password = value;
                         },
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 50,
                       ),
                       Padding(
@@ -105,6 +105,9 @@ class AuthenticationState extends State<Authentication> {
                                 'home_page',
                               );
                             }
+                            setState(() {
+                              
+                            });
                           },
                           child: Text(
                             args,
@@ -114,13 +117,13 @@ class AuthenticationState extends State<Authentication> {
                           textColor: Colors.white,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 50,
                       ),
                       Center(
                         child: Text(
                           error,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.red,
                               fontSize: 15,
                               fontWeight: FontWeight.bold),

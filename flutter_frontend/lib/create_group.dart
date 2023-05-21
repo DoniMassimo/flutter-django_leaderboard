@@ -41,14 +41,11 @@ class _CreateGroupState extends State<CreateGroup> {
         home: Builder(builder: (context) {
           return Scaffold(
               appBar: AppBar(
-                title: Center(child: const Text('CreateGroup')),
+                title: const Center(child: Text('CreateGroup')),
                 actions: [
                   IconButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, 'leaderboard', arguments: {
-                          'group_name': args['group_name'],
-                          'admin': args['admin']
-                        });
+                        Navigator.pushNamed(context, 'create_group');
                       },
                       icon: const Icon(Icons.refresh))
                 ],
@@ -62,7 +59,7 @@ class _CreateGroupState extends State<CreateGroup> {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: <Widget>[
-                        DrawerHeader(
+                        const DrawerHeader(
                           decoration: BoxDecoration(
                             color: Colors.blue,
                           ),
@@ -82,8 +79,8 @@ class _CreateGroupState extends State<CreateGroup> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      'ciao',
+                    const Text(
+                      'Create group',
                       style: TextStyle(
                           fontSize: 35,
                           color: Colors.teal,
@@ -96,7 +93,7 @@ class _CreateGroupState extends State<CreateGroup> {
                             child: Column(children: [
                           TextFormField(
                             keyboardType: TextInputType.name,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 labelText: 'Group name',
                                 hintText: 'Enter group name',
                                 prefixIcon: Icon(Icons.group),
@@ -105,8 +102,8 @@ class _CreateGroupState extends State<CreateGroup> {
                               groupName = value;
                             },
                           ),
-                          SizedBox(height: 40),
-                          SizedBox(
+                          const SizedBox(height: 40),
+                          const SizedBox(
                             height: 50,
                           ),
                           Padding(
@@ -123,7 +120,7 @@ class _CreateGroupState extends State<CreateGroup> {
                                 else if (res.containsKey('error')) {
                                   apiResult = res['error'];
                                   apiResultColor = Colors.red;
-                                }
+                                }                                
                                 setState(() {
                                   
                                 });
@@ -136,7 +133,7 @@ class _CreateGroupState extends State<CreateGroup> {
                               textColor: Colors.white,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 50,
                           ),
                           Center(

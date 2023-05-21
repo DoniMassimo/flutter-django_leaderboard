@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'api.dart' as api;
 import 'widget_generator.dart' as wg;
 
-
 class Leaderboard extends StatefulWidget {
   const Leaderboard({Key? key}) : super(key: key);
   @override
@@ -48,12 +47,11 @@ class _LeaderboardState extends State<Leaderboard> {
   }
 
   void addPoint(int added, {String id = '', String name = ''}) {
-    if (_allUsers[0]['id'] == id) {      
-    }
+    if (_allUsers[0]['id'] == id) {}
     int newPointValue = 0;
     if (id != '' && name != '') {
       var user = _allUsers.firstWhere((user) =>
-          user['id'].toString() == id && user['name'].toString() == name);      
+          user['id'].toString() == id && user['name'].toString() == name);
       user['point'] += added;
       newPointValue = user['point'];
     }
@@ -117,7 +115,7 @@ class _LeaderboardState extends State<Leaderboard> {
     }
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-          routes: wg.generateSidebarRoutes(context),
+        routes: wg.generateSidebarRoutes(context),
         home: Builder(builder: (context) {
           return Scaffold(
             appBar: AppBar(
@@ -142,7 +140,7 @@ class _LeaderboardState extends State<Leaderboard> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: <Widget>[
-                      DrawerHeader(
+                      const DrawerHeader(
                         decoration: BoxDecoration(
                           color: Colors.blue,
                         ),
@@ -162,14 +160,6 @@ class _LeaderboardState extends State<Leaderboard> {
               padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('go back')),
-                  const SizedBox(
-                    height: 20,
-                  ),
                   TextField(
                     onChanged: (value) {
                       _runFilter(value);
@@ -213,14 +203,14 @@ class _LeaderboardState extends State<Leaderboard> {
                                               Text(
                                                   _foundUsers[index]['point']
                                                       .toString(),
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontSize: 20,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       color: Colors.white)),
                                               IconButton(
                                                   iconSize: 10,
-                                                  icon: Icon(
+                                                  icon: const Icon(
                                                     Icons.add,
                                                     size: 30,
                                                     color: Colors.white,
@@ -235,7 +225,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                           : Text(
                                               _foundUsers[index]['point']
                                                   .toString(),
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white)),
@@ -248,11 +238,11 @@ class _LeaderboardState extends State<Leaderboard> {
                                       fontSize: 30, color: Colors.white),
                                 ),
                                 title: Text(_foundUsers[index]['name'],
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.white, fontSize: 30)),
                                 subtitle: Text(
                                     'Score: ${_foundUsers[index]["point"].toString()}',
-                                    style: TextStyle(color: Colors.white)),
+                                    style: const TextStyle(color: Colors.white)),
                               ),
                             ),
                           )

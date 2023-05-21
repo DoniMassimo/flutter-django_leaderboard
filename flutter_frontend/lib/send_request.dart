@@ -41,7 +41,7 @@ class _SendRequestState extends State<SendRequest> {
         home: Builder(builder: (context) {
           return Scaffold(
               appBar: AppBar(
-                title: Center(child: const Text('SendRequest')),
+                title: const Center(child: const Text('SendRequest')),
                 actions: [
                   IconButton(
                       onPressed: () {
@@ -62,7 +62,7 @@ class _SendRequestState extends State<SendRequest> {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: <Widget>[
-                        DrawerHeader(
+                        const DrawerHeader(
                           decoration: BoxDecoration(
                             color: Colors.blue,
                           ),
@@ -82,7 +82,7 @@ class _SendRequestState extends State<SendRequest> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'ciao',
                       style: TextStyle(
                           fontSize: 35,
@@ -96,7 +96,7 @@ class _SendRequestState extends State<SendRequest> {
                             child: Column(children: [
                           TextFormField(
                             keyboardType: TextInputType.name,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(                              
                                 labelText: 'Group name',
                                 hintText: 'Enter group name',
                                 prefixIcon: Icon(Icons.group),
@@ -105,8 +105,8 @@ class _SendRequestState extends State<SendRequest> {
                               groupName = value;
                             },
                           ),
-                          SizedBox(height: 40),
-                          SizedBox(
+                          const SizedBox(height: 40),
+                          const SizedBox(
                             height: 50,
                           ),
                           Padding(
@@ -136,7 +136,7 @@ class _SendRequestState extends State<SendRequest> {
                               textColor: Colors.white,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 50,
                           ),
                           Center(

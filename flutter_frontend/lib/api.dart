@@ -72,7 +72,7 @@ Future<List<dynamic>> getJoinRequest(String groupName) async {
 }
 
 Future<Map<String, dynamic>> acceptJoinRequest(
-    String groupName, String personName, bool accept) async {
+    String groupName, String personName, bool accept) async {  
   Map<String, dynamic> joinRequest = await connectToApi({
     'name': cr.Credential.name,
     'pass': cr.Credential.password,
