@@ -121,7 +121,7 @@ class _LeaderboardState extends State<Leaderboard> {
         home: Builder(builder: (context) {
           return Scaffold(
             appBar: AppBar(
-              title: Center(child: const Text('Leaderboard')),
+              title: Center(child: Text(args['group_name'])),
               actions: [
                 IconButton(
                     onPressed: () {
