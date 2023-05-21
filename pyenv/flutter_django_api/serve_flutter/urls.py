@@ -7,7 +7,7 @@ FLUTTER_WEB_APP = os.path.join(BASE_DIR, 'flutter_web_app')
 
 def flutter_redirect(request, resource):
     print('\n\n', FLUTTER_WEB_APP)
-    return serve(request, resource, FLUTTER_WEB_APP)
+    return serve(request, resource,     )
 
 urlpatterns = [
     path('home/', lambda r: flutter_redirect(r, 'index.html')),
